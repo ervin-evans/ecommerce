@@ -1,17 +1,15 @@
 package com.ecommerce.catalog.products.responses;
 
-import com.ecommerce.catalog.products.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@AllArgsConstructor
-public class ProductResponse {
-    private Product product;
-    private Message message;
-
+public class Message {
+    private String message;
+    private MessageType type;
 }
