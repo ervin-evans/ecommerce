@@ -7,6 +7,8 @@ import com.ecommerce.catalog.products.requests.ProductRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -45,6 +47,11 @@ public class ProductService implements IProductService {
     @Override
     public Optional<Product> findProductById(String productId) {
         return productRepository.findById(productId);
+    }
+
+    @Override
+    public Page<Product> findAllByPage(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
 
