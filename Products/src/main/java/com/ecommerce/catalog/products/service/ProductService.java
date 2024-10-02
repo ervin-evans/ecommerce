@@ -44,6 +44,13 @@ public class ProductService implements IProductService {
         return productRepository.save(product);
     }
 
+    @Override
+    public Product deleteProduct(String productId) {
+        Product productDatabase = productRepository.findById(productId).orElseThrow(()->new ProductNotFoundException(productId));
+        productRepository.deleteById(productId);
+        return productDatabase;
+    }
+
 
     @Override
     public Optional<Product> findProductById(String productId) {

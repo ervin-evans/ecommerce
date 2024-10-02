@@ -12,5 +12,6 @@ public interface IProductService {
     Page<Product> findAllByPage(int page);
     Product createNewProduct(ProductRequest productRequest);
     Product updateProduct(String productId, ProductRequest productRequest);
+    Product deleteProduct(String productId);
 
 }

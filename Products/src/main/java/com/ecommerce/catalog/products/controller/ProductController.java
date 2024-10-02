@@ -45,7 +45,7 @@ public class ProductController {
 
 
     /******************************************************************************************************************
-     * CREATE NEW PRODUCT
+     *                                          CREATE NEW PRODUCT
      ******************************************************************************************************************/
 
     @PostMapping
@@ -93,4 +93,21 @@ public class ProductController {
 
     }
 
+    /******************************************************************************************************************
+     *                                              DELETE PRODUCT
+     ******************************************************************************************************************/
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<ProductResponse> deleteProduct(@PathVariable String productId){
+        Product product = iProductService.deleteProduct(productId);
+        Message message = Message.builder()
+                .message("El producto "+ product.getName() + " ha sido eliminado")
+                .type(MessageType.INFO)
+                .build();
+        ProductResponse response = ProductResponse.builder()
+                .product(product)
+                .message(message)
+                .build();
+        return ResponseEntity.ok(response);
+    }
 }
