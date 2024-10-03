@@ -3,7 +3,6 @@ package com.ecommerce.catalog.products.service;
 import com.ecommerce.catalog.products.model.Product;
 import com.ecommerce.catalog.products.requests.ProductRequest;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 

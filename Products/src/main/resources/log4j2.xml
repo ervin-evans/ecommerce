@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Configuration status="WARN" monitorInterval="30">
+    <Properties>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} %p %m%n</Property>
+        <Property name="MY_PATTERN">%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
+
+        <Property name="LOG_DIR">/logs</Property>
+        <Property name="APP_LOG_ROOT">c:/temp</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${MY_PATTERN}"/>
+        </Console>
+        <RollingFile
+                name="File"
+                fileName="${APP_LOG_ROOT}/SpringBoot3/${LOG_DIR}/ecommerce.log"
+                filePattern="${APP_LOG_ROOT}/SpringBoot3/${LOG_DIR}/ecommerce.%d{yyyy-MMM-dd}.log.gz"
+                ignoreExceptions="false"
+        >
+            <PatternLayout pattern="${MY_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedtriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="7"/>
+        </RollingFile>
+         <Async name="Async">
+            <BufferSize>1024</BufferSize>
+            <Blocking>false</Blocking>
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Async>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+            <AppenderRef ref="Async"/>
+        </Root>
+    </Loggers>
+
+</Configuration>

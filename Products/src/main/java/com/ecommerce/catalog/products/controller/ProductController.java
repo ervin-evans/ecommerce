@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger(ProductController.class);
 
     @Autowired
     private IProductService iProductService;
@@ -32,6 +32,7 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<ProductCustomResponse> findAllByPage(@RequestParam(defaultValue = "0") int page) {
         Page<Product> allProductsByPage = iProductService.findAllByPage(page);
+        logger.info("Fetching all products");
         ProductCustomResponse customResponse = ProductCustomResponse.builder()
                 .products(allProductsByPage.getContent())
                 .totalElements(allProductsByPage.getNumberOfElements())
