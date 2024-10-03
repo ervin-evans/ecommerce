@@ -1,6 +1,8 @@
 package com.ecommerce.catalog.products.exceptions;
 
 import com.ecommerce.catalog.products.responses.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,8 @@ import java.util.zip.DataFormatException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger logger = LogManager.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Message> handleInvalildInput(HttpMessageNotReadableException e) {
         MessageType messageType = MessageType.WARNING;
@@ -29,6 +33,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<List<String>> handleValidationException(MethodArgumentNotValidException e) {
+        logger.warn("Hay errores en la validacion de la informacion");
         List<String> validationErrors = e.getBindingResult()
                 .getFieldErrors()
                 .stream()
@@ -39,6 +44,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ProductNotFoundException.class)
     public  ResponseEntity<Message>handleProductNotFoundException(ProductNotFoundException e){
+        logger.warn(e.getMessage());
         Message message = Message.builder()
                 .message(e.getMessage())
                 .type(MessageType.WARNING)
@@ -49,6 +55,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataFormatException.class)
     public ResponseEntity<Message> handleDataAccessException(DataAccessException e){
+        logger.error("Ocurrio un error interno en el servidor");
         Message message = Message.builder()
                 .message("Ocurrio un error interno en el servidor")
                 .type(MessageType.ERROR)

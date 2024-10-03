@@ -54,6 +54,7 @@ public class ProductController {
     public ResponseEntity<ProductResponse> createProduct(
             @Valid @RequestBody ProductRequest productRequest) {
         Product savedProduct = iProductService.createNewProduct(productRequest);
+        logger.info("El producto " + savedProduct.getName() + " ha sido creado");
         Message message = Message.builder()
                 .message("EL producto ha sido guardado")
                 .type(MessageType.INFO)
@@ -81,6 +82,7 @@ public class ProductController {
 
         //Actualizamos el producto
         Product updatedProduct = iProductService.updateProduct(productId, productRequest);
+        logger.info("El producto ha sido actualizado");
 
         Message message = Message.builder()
                 .message("El producto " + updatedProduct.getName() + " ha sido actualizado!")
@@ -102,6 +104,7 @@ public class ProductController {
     @DeleteMapping("/{productId}")
     public ResponseEntity<ProductResponse> deleteProduct(@PathVariable String productId){
         Product product = iProductService.deleteProduct(productId);
+        logger.info("El producto "+ product.getName() + " ha sido eliminado");
         Message message = Message.builder()
                 .message("El producto "+ product.getName() + " ha sido eliminado")
                 .type(MessageType.INFO)
