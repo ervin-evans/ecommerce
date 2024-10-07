@@ -34,7 +34,7 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<ProductCustomResponse> findAllByPage(@RequestParam(defaultValue = "0") int page) {
         Page<Product> allProductsByPage = iProductService.findAllByPage(page);
-        logger.info("Fetching all products");
+        logger.info("Recibida la solicitud de busqueda (por pagina) de productos");
         ProductCustomResponse customResponse = ProductCustomResponse.builder()
                 .products(allProductsByPage.getContent())
                 .totalElements(allProductsByPage.getNumberOfElements())
@@ -44,6 +44,7 @@ public class ProductController {
                 .first(allProductsByPage.isFirst())
                 .last(allProductsByPage.isLast())
                 .build();
+        logger.info("Se retornan {} productos", allProductsByPage.getTotalElements());
         return ResponseEntity.ok(customResponse);
     }
 
@@ -76,6 +77,7 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct(
             @Valid @RequestBody ProductRequest productRequest) {
+        logger.info("Solicitud recibida para crear un nuevo producto");
         Product savedProduct = iProductService.createNewProduct(productRequest);
         logger.info("El producto " + savedProduct.getName() + " ha sido creado");
         Message message = Message.builder()
