@@ -20,6 +20,9 @@ public class GlobalExceptionHandler {
 
     private static final Logger logger = LogManager.getLogger(GlobalExceptionHandler.class);
 
+    /******************************************************************************************************************
+     *                                     CUSTOM MESSAGE WHEN NO BODY DATA
+     ******************************************************************************************************************/
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Message> handleInvalildInput(HttpMessageNotReadableException e) {
         MessageType messageType = MessageType.WARNING;
@@ -30,7 +33,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
 
     }
-
+    /******************************************************************************************************************
+     *                                       VALIDATION MESSAGES EXCEPTION
+     ******************************************************************************************************************/
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<List<String>> handleValidationException(MethodArgumentNotValidException e) {
         logger.warn("Hay errores en la validacion de la informacion");
@@ -41,7 +46,9 @@ public class GlobalExceptionHandler {
                 .toList();
         return ResponseEntity.badRequest().body(validationErrors);
     }
-
+    /******************************************************************************************************************
+     *                                        PRODUCT NOT FOUND EXCEPTION
+     ******************************************************************************************************************/
     @ExceptionHandler(ProductNotFoundException.class)
     public  ResponseEntity<Message>handleProductNotFoundException(ProductNotFoundException e){
         logger.warn(e.getMessage());
@@ -52,7 +59,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
 
     }
-
+    /******************************************************************************************************************
+     *                                           DATA ACCESS EXCEPTION
+     ******************************************************************************************************************/
     @ExceptionHandler(DataFormatException.class)
     public ResponseEntity<Message> handleDataAccessException(DataAccessException e){
         logger.error("Ocurrio un error interno en el servidor");

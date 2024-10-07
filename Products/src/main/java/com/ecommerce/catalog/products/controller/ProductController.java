@@ -13,6 +13,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +47,27 @@ public class ProductController {
         return ResponseEntity.ok(customResponse);
     }
 
+    /******************************************************************************************************************
+     *                                              FIND BY NAME
+     ******************************************************************************************************************/
+    @GetMapping("/search")
+    public ResponseEntity<ProductCustomResponse> findByName(@RequestParam String regex, @RequestParam("page-number") int pageNumber) {
+        if (pageNumber < 0) pageNumber = 0;
+        Pageable pageable = PageRequest.of(pageNumber, 10);
+        logger.info("Recibida la solicitud de busqueda: {}", regex);
+        Page<Product> page = iProductService.findProductByName(regex, pageable);
+        logger.info("Se retornan {} productos", page.getNumberOfElements());
+        ProductCustomResponse customResponse = ProductCustomResponse.builder()
+                .products(page.getContent())
+                .totalElements(page.getNumberOfElements())
+                .elementsPerPage(page.getSize())
+                .totalPages(page.getTotalPages())
+                .empty(page.isEmpty())
+                .first(page.isFirst())
+                .last(page.isLast())
+                .build();
+        return ResponseEntity.ok(customResponse);
+    }
 
     /******************************************************************************************************************
      *                                          CREATE NEW PRODUCT
@@ -102,11 +125,11 @@ public class ProductController {
      ******************************************************************************************************************/
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<ProductResponse> deleteProduct(@PathVariable String productId){
+    public ResponseEntity<ProductResponse> deleteProduct(@PathVariable String productId) {
         Product product = iProductService.deleteProduct(productId);
-        logger.info("El producto "+ product.getName() + " ha sido eliminado");
+        logger.info("El producto " + product.getName() + " ha sido eliminado");
         Message message = Message.builder()
-                .message("El producto "+ product.getName() + " ha sido eliminado")
+                .message("El producto " + product.getName() + " ha sido eliminado")
                 .type(MessageType.INFO)
                 .build();
         ProductResponse response = ProductResponse.builder()
