@@ -11,4 +11,5 @@ public interface IUserService {
     public User findUserByUsername(String username);
     public User createUser(UserRequest userRequest);
     public User updateUser(UUID userId,  UserRequestToUpdate userRequest);
+    public User deleteUser(UUID userId);
 }

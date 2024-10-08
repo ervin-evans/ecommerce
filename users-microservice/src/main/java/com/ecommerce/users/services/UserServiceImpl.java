@@ -72,4 +72,16 @@ public class UserServiceImpl implements IUserService {
         log.info("El usuario con id: " + user.getId() + " ha sido actualizado");
         return userUpdated;
     }
+
+    /******************************************************************************************************************
+     *                                              DELETE USER BY ID
+     ******************************************************************************************************************/
+    @Override
+    public User deleteUser(UUID userId) {
+        log.info("Intentando eliminar al usuario con id " + userId);
+        User user = iUserRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        iUserRepository.deleteById(userId);
+        log.info("Usuario con id " + userId + " eliminado");
+        return user;
+    }
 }

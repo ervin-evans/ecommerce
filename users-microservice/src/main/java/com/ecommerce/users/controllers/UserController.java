@@ -82,4 +82,21 @@ public class UserController {
         log.info("Request para actualizar al usuario terminado con exito!");
         return ResponseEntity.ok(userResponse);
     }
+
+    /******************************************************************************************************************
+     *                                              DELETE USER
+     ******************************************************************************************************************/
+    @DeleteMapping("/{id}")
+    public ResponseEntity<UserResponse> deleteUser(@PathVariable("id") UUID userId) {
+        log.info("Request para eliminar usuario recibido");
+        User user = iUserService.deleteUser(userId);
+        var message = Message.builder()
+                .message("El usuario con el id " + userId + " ha sido eliminado")
+                .type(MessageType.INFO).build();
+        var respose = UserResponse.builder()
+                .user(user).message(message).build();
+        log.info("Request para eliminar usuario ha terminado con exito");
+        return ResponseEntity.ok(respose);
+
+    }
 }
