@@ -24,6 +24,17 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private BCryptPasswordEncoder encoder;
 
+    /******************************************************************************************************************
+     *                                             FIND USER BY ID
+     ******************************************************************************************************************/
+    @Override
+    public User findUserById(UUID userId) {
+        return iUserRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+    }
+
+    /******************************************************************************************************************
+     *                                              CREATE USER
+     ******************************************************************************************************************/
     @Override
     public User createUser(UserRequest userRequest) {
         log.info("Intentando crear al usuario " + userRequest.getUsername());
@@ -40,8 +51,11 @@ public class UserServiceImpl implements IUserService {
         return userSaved;
     }
 
+    /******************************************************************************************************************
+     *                                              UPDATE USER
+     ******************************************************************************************************************/
     @Override
-    public User updateUser(UUID userId,  UserRequestToUpdate userRequest) {
+    public User updateUser(UUID userId, UserRequestToUpdate userRequest) {
         log.info("Intentando actualizar al usuario con id: " + userId);
         var user = iUserRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userRequest.getId()));
         user.setName(userRequest.getName());

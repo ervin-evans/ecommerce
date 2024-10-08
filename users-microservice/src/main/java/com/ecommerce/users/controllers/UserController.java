@@ -27,6 +27,16 @@ public class UserController {
     //private final Logger logger = LogManager.getLogger(UserController.class);
 
     /******************************************************************************************************************
+     *                                             FIND USER BY ID
+     ******************************************************************************************************************/
+    @GetMapping("/find/{userId}")
+    public ResponseEntity<UserResponse> findUserById(@PathVariable UUID userId) {
+        User userById = iUserService.findUserById(userId);
+        UserResponse response = UserResponse.builder().user(userById).build();
+        return ResponseEntity.ok(response);
+    }
+
+    /******************************************************************************************************************
      *                                              CREATE NEW USER
      ******************************************************************************************************************/
 
