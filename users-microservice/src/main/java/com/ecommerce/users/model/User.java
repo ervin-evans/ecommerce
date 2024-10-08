@@ -1,4 +1,4 @@
-package model;
+package com.ecommerce.users.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -44,8 +44,9 @@ public class User {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Builder.Default
     @Column(name = "image", length = 30)
-    private String image;
+    private String image="avatar.png";
 
     //Metodos del ciclo de vida para manejar los timestamps
     @PrePersist

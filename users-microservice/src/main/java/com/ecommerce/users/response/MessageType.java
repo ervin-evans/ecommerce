@@ -1,4 +1,4 @@
-package com.ecommerce.catalog.products.responses;
+package com.ecommerce.users.response;
 
 public enum MessageType {
     INFO,
