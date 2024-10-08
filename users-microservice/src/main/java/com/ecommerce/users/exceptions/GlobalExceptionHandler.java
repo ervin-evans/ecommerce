@@ -35,8 +35,8 @@ public class GlobalExceptionHandler {
     /******************************************************************************************************************
      *                                      HANDLER FOR USER NOT FOUND EXCEPTION
      ******************************************************************************************************************/
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Message> handleUserNotFoundException(RuntimeException e) {
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Message> handleUserNotFoundException(UserNotFoundException e) {
         logger.warn(e.getMessage());
         var message = Message.builder()
                 .message(e.getMessage())
