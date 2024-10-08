@@ -1,12 +1,16 @@
 package com.ecommerce.users.services;
 
+import com.ecommerce.users.exceptions.UserNotFoundException;
+import com.ecommerce.users.model.User;
 import com.ecommerce.users.repository.IUserRepository;
 import com.ecommerce.users.requests.UserRequest;
-import com.ecommerce.users.model.User;
+import com.ecommerce.users.requests.UserRequestToUpdate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -22,7 +26,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User createUser(UserRequest userRequest) {
-        log.info("Intentando crear al usuario "+userRequest.getUsername());
+        log.info("Intentando crear al usuario " + userRequest.getUsername());
         var userToSave = User.builder()
                 .name(userRequest.getName())
                 .lastname(userRequest.getLastname())
@@ -31,8 +35,19 @@ public class UserServiceImpl implements IUserService {
                 .password(encoder.encode(userRequest.getPassword()))
                 .image(userRequest.getImage())
                 .build();
-        User userSaved =  iUserRepository.save(userToSave);
-        log.info("EL usuario "+userSaved.getUsername() + " ha sido guardado");
+        User userSaved = iUserRepository.save(userToSave);
+        log.info("EL usuario " + userSaved.getUsername() + " ha sido guardado");
         return userSaved;
+    }
+
+    @Override
+    public User updateUser(UUID userId,  UserRequestToUpdate userRequest) {
+        log.info("Intentando actualizar al usuario con id: " + userId);
+        var user = iUserRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userRequest.getId()));
+        user.setName(userRequest.getName());
+        user.setLastname(userRequest.getLastname());
+        User userUpdated = iUserRepository.save(user);
+        log.info("El usuario con id: " + user.getId() + " ha sido actualizado");
+        return userUpdated;
     }
 }

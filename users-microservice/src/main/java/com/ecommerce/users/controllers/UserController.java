@@ -1,20 +1,20 @@
 package com.ecommerce.users.controllers;
 
+import com.ecommerce.users.model.User;
 import com.ecommerce.users.requests.UserRequest;
+import com.ecommerce.users.requests.UserRequestToUpdate;
 import com.ecommerce.users.response.Message;
 import com.ecommerce.users.response.MessageType;
 import com.ecommerce.users.response.UserResponse;
 import com.ecommerce.users.services.IUserService;
 import jakarta.validation.Valid;
-import com.ecommerce.users.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/users")
@@ -25,6 +25,10 @@ public class UserController {
     private IUserService iUserService;
 
     //private final Logger logger = LogManager.getLogger(UserController.class);
+
+    /******************************************************************************************************************
+     *                                              CREATE NEW USER
+     ******************************************************************************************************************/
 
     @PostMapping
     public ResponseEntity<UserResponse> createNewUser(@Valid @RequestBody UserRequest userRequest) {
@@ -38,6 +42,21 @@ public class UserController {
                 .user(userSaved).message(message).build();
         log.info("Request para crear usuario ha terminado con exito");
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
+    }
 
+    /******************************************************************************************************************
+     *                                              UPDATE USER
+     ******************************************************************************************************************/
+    @PutMapping("/{userId}")
+    public ResponseEntity<UserResponse> updateUser(@PathVariable UUID userId, @Valid @RequestBody UserRequestToUpdate userRequest) {
+        log.info("Request recibido para actualizar un usuario");
+        var userUpdated = iUserService.updateUser(userId, userRequest);
+        var message = Message.builder()
+                .message("El usuario con id " + userUpdated.getId() + " ha sido actualizado")
+                .type(MessageType.INFO).build();
+        var userResponse = UserResponse.builder()
+                .user(userUpdated).message(message).build();
+        log.info("Request para actualizar al usuario terminado con exito!");
+        return ResponseEntity.ok(userResponse);
     }
 }
