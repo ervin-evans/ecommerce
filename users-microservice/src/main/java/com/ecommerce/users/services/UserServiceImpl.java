@@ -29,7 +29,15 @@ public class UserServiceImpl implements IUserService {
      ******************************************************************************************************************/
     @Override
     public User findUserById(UUID userId) {
-        return iUserRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        return iUserRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+    }
+
+    /******************************************************************************************************************
+     *                                             FIND USER BY USERNAME
+     ******************************************************************************************************************/
+    @Override
+    public User findUserByUsername(String username) {
+        return iUserRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
     }
 
     /******************************************************************************************************************
@@ -57,7 +65,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User updateUser(UUID userId, UserRequestToUpdate userRequest) {
         log.info("Intentando actualizar al usuario con id: " + userId);
-        var user = iUserRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userRequest.getId()));
+        var user = iUserRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         user.setName(userRequest.getName());
         user.setLastname(userRequest.getLastname());
         User userUpdated = iUserRepository.save(user);

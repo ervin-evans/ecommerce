@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public interface IUserService {
     public User findUserById(UUID userId);
+    public User findUserByUsername(String username);
     public User createUser(UserRequest userRequest);
     public User updateUser(UUID userId,  UserRequestToUpdate userRequest);
 }

@@ -29,10 +29,23 @@ public class UserController {
     /******************************************************************************************************************
      *                                             FIND USER BY ID
      ******************************************************************************************************************/
-    @GetMapping("/find/{userId}")
+    @GetMapping("/find/id/{userId}")
     public ResponseEntity<UserResponse> findUserById(@PathVariable UUID userId) {
         User userById = iUserService.findUserById(userId);
         UserResponse response = UserResponse.builder().user(userById).build();
+        return ResponseEntity.ok(response);
+    }
+
+    /******************************************************************************************************************
+     *                                             FIND USER BY ID
+     ******************************************************************************************************************/
+    @GetMapping("/find/username/{username}")
+    public ResponseEntity<UserResponse> findByUsername(@PathVariable String username) {
+        log.info("Request recibido para buscar un usuario por username");
+        User userByUsername = iUserService.findUserByUsername(username);
+        userByUsername.setPassword(null);
+        UserResponse response = UserResponse.builder().user(userByUsername).build();
+        log.info("Request para buscar usuario por username terminado con exito!");
         return ResponseEntity.ok(response);
     }
 
@@ -44,7 +57,7 @@ public class UserController {
     public ResponseEntity<UserResponse> createNewUser(@Valid @RequestBody UserRequest userRequest) {
         log.info("Request recibido para crear un usuario");
         User userSaved = iUserService.createUser(userRequest);
-        userSaved.setPassword("");
+        userSaved.setPassword(null);
         var message = Message.builder()
                 .message("El usuario " + userSaved.getUsername() + " ha sido creado")
                 .type(MessageType.INFO).build();

@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
     /******************************************************************************************************************
      *                                           DATA ACCESS EXCEPTION
      ******************************************************************************************************************/
-    @ExceptionHandler(DataFormatException.class)
+    @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<Message> handleDataAccessException(DataAccessException e){
         logger.error("Ocurrio un error interno en el servidor debido a: " + e.getMessage());
         Message message = Message.builder()
