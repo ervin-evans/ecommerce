@@ -46,6 +46,18 @@ public class GlobalExceptionHandler {
     }
 
     /******************************************************************************************************************
+     *                                      HANDLER FOR ROLE EXISTS EXCEPTION
+     ******************************************************************************************************************/
+    @ExceptionHandler(RoleExistsException.class)
+    public ResponseEntity<Message> handleRoleExistsException(RoleExistsException e) {
+        logger.warn(e.getMessage());
+        var message = Message.builder()
+                .message(e.getMessage())
+                .type(MessageType.INFO)
+                .build();
+        return ResponseEntity.status(HttpStatus.FOUND).body(message);
+    }
+    /******************************************************************************************************************
      *                                      HANDLER FOR ROLE NOT FOUND EXCEPTION
      ******************************************************************************************************************/
     @ExceptionHandler(RoleNotFoundException.class)
