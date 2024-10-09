@@ -44,6 +44,19 @@ public class GlobalExceptionHandler {
                 .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
+
+    /******************************************************************************************************************
+     *                                      HANDLER FOR ROLE NOT FOUND EXCEPTION
+     ******************************************************************************************************************/
+    @ExceptionHandler(RoleNotFoundException.class)
+    public ResponseEntity<Message> handleRoleNotFoundException(RoleNotFoundException e){
+        logger.warn("Role no encontrado");
+        var message = Message.builder()
+                .message(e.getMessage())
+                .type(MessageType.INFO)
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+    }
     /******************************************************************************************************************
      *                                           DATA ACCESS EXCEPTION
      ******************************************************************************************************************/
