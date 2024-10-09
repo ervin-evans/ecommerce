@@ -41,10 +41,50 @@ public class UserServiceImpl implements IUserService {
     }
 
     /******************************************************************************************************************
+     *                                             FIND USER BY EMAIL
+     ******************************************************************************************************************/
+    @Override
+    public User findByEmail(String email) {
+        log.info("Intentando buscar usuario por email");
+        User user = iUserRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        log.info("El usuario con email " + user.getEmail() + " ha sido encontrado");
+        return user;
+    }
+
+    /******************************************************************************************************************
+     *                                             EXISTS USER BY EMAIL
+     ******************************************************************************************************************/
+    @Override
+    public Boolean existsUserByEmail(String email) {
+        log.info("Verificando si el usuario con email: " + email + " existe");
+        boolean exists = iUserRepository.existsByEmail(email);
+        if (exists) log.info("El usuario con email: " + email + " si existe");
+        else log.info("El usuario con email: " + email + " no existe");
+        return exists;
+    }
+
+    /******************************************************************************************************************
+     *                                             EXISTS USER BY USERNAME
+     ******************************************************************************************************************/
+    @Override
+    public Boolean existsUserByUsername(String username) {
+        log.info("Verificando si el usuario con username: " + username + " existe");
+        boolean exists = iUserRepository.existsByUsername(username);
+        if (exists) log.info("El usuario con username: " + username + " si existe");
+        else log.info("El usuario con username: " + username + " no existe");
+        return exists;
+    }
+
+    /******************************************************************************************************************
      *                                              CREATE USER
      ******************************************************************************************************************/
     @Override
     public User createUser(UserRequest userRequest) {
+        log.info("Verificando si el e-mail o el usuario existen");
+        if (iUserRepository.existsByEmail(userRequest.getEmail())) throw new RuntimeException("El E-mail ya existe");
+        if (iUserRepository.existsByUsername(userRequest.getUsername()))
+            throw new RuntimeException("El username ya existe");
+
         log.info("Intentando crear al usuario " + userRequest.getUsername());
         var userToSave = User.builder()
                 .name(userRequest.getName())

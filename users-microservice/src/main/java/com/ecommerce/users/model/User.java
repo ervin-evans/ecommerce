@@ -23,7 +23,7 @@ public class User {
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "BINARY(16)")
     private UUID id;
 
-    @Column(name = "name",nullable = false, length = 50)
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
 
     @Column(name = "lastname", nullable = false, length = 50)
@@ -46,7 +46,7 @@ public class User {
 
     @Builder.Default
     @Column(name = "image", length = 30)
-    private String image="avatar.png";
+    private String image = "avatar.png";
 
     //Metodos del ciclo de vida para manejar los timestamps
     @PrePersist
