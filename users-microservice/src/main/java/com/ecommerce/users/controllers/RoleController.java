@@ -11,10 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/roles")
@@ -38,4 +37,18 @@ public class RoleController {
         log.info("Request para crear un nuevo ROLE finalizado con exito");
         return ResponseEntity.status(HttpStatus.CREATED).body(roleResponse);
     }
+
+    /******************************************************************************************************************
+     *                                          UPDATE UN ROLE
+     ******************************************************************************************************************/
+    @PutMapping("/{roleId}")
+    public ResponseEntity<RoleResponse> updateRole(@PathVariable UUID roleId, @Valid @RequestBody RoleRequest roleRequest) {
+        log.info("Request para ACTUALIZAR un ROLE iniciado");
+        Role roleUpdated = iRoleService.updateRole(roleId, roleRequest);
+        var message = Message.builder().message("El ROLE ha sido actualizado").type(MessageType.INFO).build();
+        var response = RoleResponse.builder().role(roleUpdated).message(message).build();
+        log.info("Request para ACTUALIZAR un ROLE finalizado con exito");
+        return ResponseEntity.ok(response);
+    }
+
 }

@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @Slf4j
 public class RoleServiceImpl implements IRoleService {
@@ -16,7 +18,7 @@ public class RoleServiceImpl implements IRoleService {
     @Autowired
     private IRoleRepository iRoleRepository;
 
-    private final String roleSuffix= "ROLE_";
+    private final String rolePrefix = "ROLE_";
 
     /******************************************************************************************************************
      *                                      FIND ROLE BY NAME
@@ -51,7 +53,37 @@ public class RoleServiceImpl implements IRoleService {
         log.info("El " + role.getName() + " ha sido guardado");
         return role;
     }
-    private String formatRolename(String rolename){
-        return  roleSuffix+rolename.toUpperCase();
+
+    /******************************************************************************************************************
+     *                                     CREATE A NEW ROLE
+     ******************************************************************************************************************/
+
+    @Override
+    public Role updateRole(UUID roleId, RoleRequest roleRequest) {
+        log.info("Comprobando si el ROLE existe");
+        var rolenameFormatted = formatRolename(roleRequest.getName());
+        Boolean roleExists = iRoleRepository.existsRoleByName(rolenameFormatted);
+        if (roleExists) throw new RoleExistsException("El " + roleRequest.getName().toUpperCase() + " ya existe");
+        Role role = iRoleRepository.findById(roleId).orElseThrow(
+                () -> new RoleNotFoundException("El ROLE con id: " + roleId + " no se ha encontrado"));
+        var rolename = role.getName();
+        role.setName(formatRolename(roleRequest.getName()));
+        log.info("Actualizando  ROLE");
+        var roleSaved = iRoleRepository.save(role);
+        log.info("Antes: " + rolename + ", ahora: " + roleSaved.getName());
+        log.info("ROLE actualizado correctamente");
+        return roleSaved;
+    }
+
+
+    /******************************************************************************************************************
+     *                                     PRIVATE METHODS
+     ******************************************************************************************************************/
+
+    private String formatRolename(String rolename) {
+        rolename = rolename.toUpperCase();
+        if (!rolename.contains(rolePrefix))
+            rolename = rolePrefix + rolename.toUpperCase();
+        return rolename;
     }
 }
