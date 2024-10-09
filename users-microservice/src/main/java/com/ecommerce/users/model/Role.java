@@ -21,7 +21,7 @@ public class Role {
     @UuidGenerator
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "BINARY(16)")
     private UUID id;
-    
+
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 }
