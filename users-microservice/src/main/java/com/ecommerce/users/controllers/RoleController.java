@@ -24,6 +24,19 @@ public class RoleController {
     private IRoleService iRoleService;
 
     /******************************************************************************************************************
+     *                                     FIND ROLE BY ID
+     ******************************************************************************************************************/
+    @GetMapping("/{roleId}")
+    public ResponseEntity<RoleResponse> findRoleById(@PathVariable UUID roleId) {
+        log.info("Request para buscar un ROLE por id iniciado");
+        var roleById = iRoleService.findById(roleId);
+        var roleResponse = RoleResponse.builder().role(roleById).build();
+        log.info("ROLE encontrado");
+        log.info("Request para buscar un ROLE por id finalizado con exito");
+        return ResponseEntity.ok(roleResponse);
+    }
+
+    /******************************************************************************************************************
      *                                     CREATE A NEW ROLE
      ******************************************************************************************************************/
     @PostMapping

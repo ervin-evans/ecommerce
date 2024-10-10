@@ -21,6 +21,15 @@ public class RoleServiceImpl implements IRoleService {
     private final String rolePrefix = "ROLE_";
 
     /******************************************************************************************************************
+     *                                      FIND ROLE BY ID
+     ******************************************************************************************************************/
+    @Override
+    public Role findById(UUID roleId) {
+        log.info("Buscando ROLE con id: " + roleId);
+        return iRoleRepository.findById(roleId).orElseThrow(() -> new RoleNotFoundException("El ROL con el " + roleId + " no existe"));
+    }
+
+    /******************************************************************************************************************
      *                                      FIND ROLE BY NAME
      ******************************************************************************************************************/
     @Override
