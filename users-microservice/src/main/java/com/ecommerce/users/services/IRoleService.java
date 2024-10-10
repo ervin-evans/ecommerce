@@ -20,4 +20,6 @@ public interface IRoleService {
     public Role createNewRole(RoleRequest roleRequest);
 
     public Role updateRole(UUID roleId, RoleRequest roleRequest);
+
+    public Role deleteRole(UUID roleId);
 }

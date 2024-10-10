@@ -95,6 +95,20 @@ public class RoleServiceImpl implements IRoleService {
         return roleSaved;
     }
 
+    /******************************************************************************************************************
+     *                                          DELETE ROLE
+     ******************************************************************************************************************/
+    @Override
+    public Role deleteRole(UUID roleId) {
+        log.info("Buscando el ROLE con id:" + roleId + " para eliminar");
+        Role role = iRoleRepository.findById(roleId).orElseThrow(() -> new RoleNotFoundException("El ROLE con id " + roleId + " no existe"));
+        log.info("ROLE encontrado");
+        log.info("Eliminando ROLE");
+        iRoleRepository.deleteById(roleId);
+        log.info("El " + role.getName() + " ha sido eliminado");
+        return role;
+    }
+
 
     /******************************************************************************************************************
      *                                     PRIVATE METHODS

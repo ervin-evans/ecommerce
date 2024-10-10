@@ -30,13 +30,14 @@ public class RoleController {
 
     @Value("${ecommerce.microservice.role.page-size}")
     private Integer pageSize;
+
     /******************************************************************************************************************
      *                                     FIND ROLE BY PAGE
      ******************************************************************************************************************/
     @GetMapping
     public ResponseEntity<RoleCustomResponse> findAllRolesByPage(@RequestParam(defaultValue = "0") int page) {
         log.info("Request para buscar ROLES por pagina iniciado");
-        if (page<0) page=0;
+        if (page < 0) page = 0;
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<Role> rolesByPage = iRoleService.findRolesByPage(pageable);
         var response = RoleCustomResponse.builder()
@@ -91,6 +92,19 @@ public class RoleController {
         var message = Message.builder().message("El ROLE ha sido actualizado").type(MessageType.INFO).build();
         var response = RoleResponse.builder().role(roleUpdated).message(message).build();
         log.info("Request para ACTUALIZAR un ROLE finalizado con exito");
+        return ResponseEntity.ok(response);
+    }
+
+    /******************************************************************************************************************
+     *                                          DELETE ROLE
+     ******************************************************************************************************************/
+    @DeleteMapping("/{roleId}")
+    public ResponseEntity<RoleResponse> deleteRole(@PathVariable UUID roleId) {
+        log.info("Request para ELIMINAR un ROLE iniciado");
+        Role role = iRoleService.deleteRole(roleId);
+        var message = Message.builder().message("El ROLE ha sido elimiando").type(MessageType.INFO).build();
+        var response = RoleResponse.builder().role(role).message(message).build();
+        log.info("Request para ELIMINAR un ROLE ha finalizado");
         return ResponseEntity.ok(response);
     }
 
