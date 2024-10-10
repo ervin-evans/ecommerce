@@ -7,6 +7,8 @@ import com.ecommerce.users.repository.IRoleRepository;
 import com.ecommerce.users.requests.RoleRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -19,6 +21,15 @@ public class RoleServiceImpl implements IRoleService {
     private IRoleRepository iRoleRepository;
 
     private final String rolePrefix = "ROLE_";
+
+    /******************************************************************************************************************
+     *                                      FIND ROLE BY PAGE
+     ******************************************************************************************************************/
+    @Override
+    public Page<Role> findRolesByPage(Pageable pageable) {
+        log.info("Buscando ROLES por pagina");
+        return iRoleRepository.findAll(pageable);
+    }
 
     /******************************************************************************************************************
      *                                      FIND ROLE BY ID
