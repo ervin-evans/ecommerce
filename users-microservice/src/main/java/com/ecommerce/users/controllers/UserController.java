@@ -5,11 +5,16 @@ import com.ecommerce.users.requests.UserRequest;
 import com.ecommerce.users.requests.UserRequestToUpdate;
 import com.ecommerce.users.response.Message;
 import com.ecommerce.users.response.MessageType;
+import com.ecommerce.users.response.UserCustomResponse;
 import com.ecommerce.users.response.UserResponse;
 import com.ecommerce.users.services.IUserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +29,30 @@ public class UserController {
     @Autowired
     private IUserService iUserService;
 
+    @Value("${ecommerce.microservice.role.page-size:10}")
+    private int pageSize;
     //private final Logger logger = LogManager.getLogger(UserController.class);
+
+    /******************************************************************************************************************
+     *                                             FIND ALL USERS BY PAGE
+     ******************************************************************************************************************/
+    @GetMapping
+    public ResponseEntity<UserCustomResponse> findAllUsersByPage(@RequestParam(defaultValue = "0") int page) {
+        log.info("Request para buscar los usuarios por pagina iniciado");
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<User> usersByPage = iUserService.findByPage(pageable);
+        log.info("Pagina: " + usersByPage.getPageable().getPageNumber() + " - Usuarios encontrados: " + usersByPage.getNumberOfElements());
+        var response = UserCustomResponse.builder()
+                .users(usersByPage.getContent())
+                .totalPages(usersByPage.getTotalPages())
+                .totalElements(usersByPage.getTotalElements())
+                .numberOfElements(usersByPage.getNumberOfElements())
+                .isEmpty(usersByPage.isEmpty())
+                .isFirst(usersByPage.isFirst())
+                .isLast(usersByPage.isLast()).build();
+        log.info("Request para buscar los usuarios por pagina finalizado con exito");
+        return ResponseEntity.ok(response);
+    }
 
     /******************************************************************************************************************
      *                                             FIND USER BY ID
@@ -37,7 +65,7 @@ public class UserController {
     }
 
     /******************************************************************************************************************
-     *                                             FIND USER BY ID
+     *                                             FIND USER BY USERNAME
      ******************************************************************************************************************/
     @GetMapping("/find/username/{username}")
     public ResponseEntity<UserResponse> findByUsername(@PathVariable String username) {

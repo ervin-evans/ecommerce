@@ -7,6 +7,8 @@ import com.ecommerce.users.requests.UserRequest;
 import com.ecommerce.users.requests.UserRequestToUpdate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,16 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     private BCryptPasswordEncoder encoder;
+
+    /******************************************************************************************************************
+     *                                             FIND ALL USERS BY PAGE
+     ******************************************************************************************************************/
+    @Override
+    public Page<User> findByPage(Pageable pageable) {
+        log.info("Recuperando los usuarios de la pagina " + pageable.getPageNumber());
+        return iUserRepository.findAll(pageable);
+
+    }
 
     /******************************************************************************************************************
      *                                             FIND USER BY ID
